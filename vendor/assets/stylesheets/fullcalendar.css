@@ -297,6 +297,11 @@ a.fc-event {
 .fc-event-title {
 	padding: 0 1px;
 	}
+
+.fc-remove-event {
+	float: right;
+	padding: 0 1px;
+}	
 	
 .fc .ui-resizable-handle { /*** TODO: don't use ui-resizable anymore, change class ***/
 	display: block;

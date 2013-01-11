@@ -3907,6 +3907,7 @@ function AgendaEventRenderer() {
 			"<div class='fc-event-time'>" +
 			htmlEscape(formatDates(event.start, event.end, opt('timeFormat'))) +
 			"</div>" +
+			"<span class='fc-remove-event'>x</span>" +
 			"</div>" +
 			"<div class='fc-event-content'>" +
 			"<div class='fc-event-title'>" +
@@ -4346,12 +4347,20 @@ function View(element, calendar, viewName) {
 	// attaches eventClick, eventMouseover, eventMouseout
 	function eventElementHandlers(event, eventElement) {
 		eventElement
-			.click(function(ev) {
-				if (!eventElement.hasClass('ui-draggable-dragging') &&
-					!eventElement.hasClass('ui-resizable-resizing')) {
-						return trigger('eventClick', this, event, ev);
+			.click(
+				function(ev) {
+					if (!eventElement.hasClass('ui-draggable-dragging') &&
+						!eventElement.hasClass('ui-resizable-resizing')) {
+							console.log(ev.target);
+							return trigger('eventClick', this, event, ev);
 					}
-			})
+				},
+				function(ev) {
+					if (ev.target.className == "fc-remove-event") {
+						trigger('eventRemoveClick', this, event, ev);
+					}
+				}				
+			)
 			.hover(
 				function(ev) {
 					trigger('eventMouseover', this, event, ev);
@@ -4432,6 +4441,10 @@ function View(element, calendar, viewName) {
 			ui
 		);
 		reportEventChange(eventId);
+	}
+
+	function eventRemove(e, event, dayDelta, minuteDelta, ev, ui) {
+		alert('eventRemove')
 	}
 	
 	
@@ -4658,7 +4671,9 @@ function DayEventRenderer() {
 					"</span>";
 			}
 			html +=
-				"<span class='fc-event-title'>" + htmlEscape(event.title) + "</span>" +
+				"<span class='fc-event-title'>" + htmlEscape(event.title) + "</span>";
+			html +=
+				"<span class='fc-remove-event'>x</span>" +
 				"</div>";
 			if (seg.isEnd && isEventResizable(event)) {
 				html +=
